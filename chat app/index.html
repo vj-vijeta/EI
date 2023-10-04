@@ -24,7 +24,7 @@
       if (roomID && user && !socket) {
         room = roomID;
         username = user;
-        socket = new WebSocket(`ws://localhost:3000?room=${roomID}&username=${user}`);
+        socket = new WebSocket(`ws://your-server-ip-or-domain:port?room=${roomID}&username=${user}`);
 
         socket.onopen = (event) => {
           console.log('Connected to room:', room);
@@ -38,7 +38,6 @@
 
         socket.onerror = (error) => {
           console.error('WebSocket error:', error);
-          // Handle error here, e.g., display an error message to the user
           alert('WebSocket connection failed. Please try again later.');
         };
       }
