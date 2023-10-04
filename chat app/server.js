@@ -27,19 +27,18 @@ class ChatRoom {
     }
   }
 
-  broadcast(message, sender) {
+  broadcast(message) {
     this.clients.forEach((client) => {
-      if (client !== sender) {
-        client.sendMessage(message);
-      }
+      client.sendMessage(message);
     });
   }
 }
 
 class ChatClient {
-  constructor(ws, chatRoom) {
+  constructor(ws, chatRoom, username) {
     this.ws = ws;
     this.chatRoom = chatRoom;
+    this.username = username;
     this.chatRoom.addClient(this);
   }
 
@@ -58,7 +57,10 @@ const wss = new WebSocket.Server({ noServer: true });
 const rooms = {};
 
 wss.on('connection', (ws, req) => {
-  const roomID = url.parse(req.url, true).query.room;
+  const params = new URL(req.url, 'http://localhost/');
+
+  const roomID = params.searchParams.get('room');
+  const username = params.searchParams.get('username');
 
   if (!roomID) {
     ws.close();
@@ -68,10 +70,11 @@ wss.on('connection', (ws, req) => {
     rooms[roomID] = ChatRoom.getInstance(roomID);
   }
 
-  new ChatClient(ws, rooms[roomID]);
+  new ChatClient(ws, rooms[roomID], username);
 
   ws.on('message', (message) => {
-    rooms[roomID].broadcast(message, ws);
+    const chatMessage = `[${roomID}] [${username}]: ${message}`;
+    rooms[roomID].broadcast(chatMessage);
   });
 
   ws.on('close', () => {
