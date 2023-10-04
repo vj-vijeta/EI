@@ -1,6 +1,7 @@
 const WebSocket = require('ws');
 const http = require('http');
 const url = require('url');
+const { v4: uuidv4 } = require('uuid');
 
 class ChatRoom {
   constructor(roomID) {
@@ -27,11 +28,11 @@ class ChatRoom {
   }
 
   broadcast(message, sender) {
-    for (const client of this.clients) {
+    this.clients.forEach((client) => {
       if (client !== sender) {
         client.sendMessage(message);
       }
-    }
+    });
   }
 }
 
