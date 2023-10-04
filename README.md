@@ -13,6 +13,9 @@ coding exercise from Education Initiatives
 node server.js
 
 #opening client open the index.html on the browser
+# for opening remote client use 
+remotecli.html and insert the server ip and port no in place of 'your-server-ip-or-domain' and 'port'
+
 
 
 
