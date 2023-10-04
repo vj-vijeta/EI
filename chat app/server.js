@@ -64,6 +64,7 @@ wss.on('connection', (ws, req) => {
 
   if (!roomID) {
     ws.close();
+    return;
   }
 
   if (!rooms[roomID]) {
@@ -89,6 +90,11 @@ server.on('upgrade', (request, socket, head) => {
 });
 
 const PORT = process.env.PORT || 3000;
+
 server.listen(PORT, () => {
   console.log(`WebSocket server is listening on port ${PORT}`);
+});
+
+wss.on('error', (error) => {
+  console.error('WebSocket server error:', error);
 });
