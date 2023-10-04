@@ -1,5 +1,6 @@
 const WebSocket = require('ws');
 const http = require('http');
+const url = require('url');
 const { v4: uuidv4 } = require('uuid');
 
 class ChatRoom {
@@ -51,12 +52,12 @@ const server = http.createServer((req, res) => {
   res.end('WebSocket server is running');
 });
 
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({ noServer: true });
 
 const rooms = {};
 
 wss.on('connection', (ws, req) => {
-  const params = new URL(req.url, 'http://' + req.headers.host);
+  const params = new URL(req.url, 'http://localhost/');
 
   const roomID = params.searchParams.get('room');
   const username = params.searchParams.get('username');
