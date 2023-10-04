@@ -35,6 +35,12 @@
           const message = event.data;
           chat.innerHTML += `<p>${message}</p>`;
         };
+
+        socket.onerror = (error) => {
+          console.error('WebSocket error:', error);
+          // Handle error here, e.g., display an error message to the user
+          alert('WebSocket connection failed. Please try again later.');
+        };
       }
     }
 
