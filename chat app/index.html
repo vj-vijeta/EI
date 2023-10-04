@@ -6,8 +6,8 @@
 <body>
   <input type="text" id="roomID" placeholder="Room ID">
   <button onclick="joinRoom()">Join Room</button>
+  <br><br>
   <input type="text" id="username" placeholder="Username">
-  <button onclick="enterUsername()">Enter Username</button>
   <input type="text" id="message" placeholder="Message">
   <button onclick="sendMessage()">Send Message</button>
   <div id="chat"></div>
@@ -16,17 +16,18 @@
     let socket;
     let room = null;
     let username = null;
-    let roomJoined = false;
 
     function joinRoom() {
       const roomID = document.getElementById('roomID').value;
-      if (roomID && !socket) {
+      const user = document.getElementById('username').value;
+
+      if (roomID && user && !socket) {
         room = roomID;
-        socket = new WebSocket(`ws://localhost:3000?room=${roomID}`);
+        username = user;
+        socket = new WebSocket(`ws://localhost:3000?room=${roomID}&username=${user}`);
 
         socket.onopen = (event) => {
           console.log('Connected to room:', room);
-          roomJoined = true; // Mark the room as joined
         };
 
         socket.onmessage = (event) => {
@@ -37,17 +38,10 @@
       }
     }
 
-    function enterUsername() {
-      const user = document.getElementById('username').value;
-      if (user && socket && roomJoined) {
-        username = user;
-      }
-    }
-
     function sendMessage() {
       const message = document.getElementById('message').value;
-      if (message && socket && username) {
-        socket.send(`[${room}] [${username}]: ${message}`);
+      if (message && socket) {
+        socket.send(message);
         document.getElementById('message').value = '';
       }
     }
